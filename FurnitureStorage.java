@@ -8,77 +8,89 @@ package com.mycompany.mainapplication1;
  *
  * @author Student
  */
+/**
+ * Business logic processing engine implementing analytical calculations.
+ */
+/**
+ * Business logic processing engine that implements your exact IFurnitureStorage interface.
+ */
 public class FurnitureStorage implements IFurnitureStorage {
     
-    // 1D array for the towns/columns
-    private final String[] towns = {"Cape Town", "Durban", "Port Elizabeth"};
-    
-    // 2D array for the customer data (Rows = Years, Columns = Towns)
-    private final int[][] customerData = {
-        {90, 15, 50},  // Year 1
-        {125, 55, 91}  // Year 2
-    };
+    // Internal data storage arrays
+    private final String[] towns;
+    private final int[][] customerData;
 
+    /**
+     * Constructor to pass the arrays directly into the calculation engine.
+     */
+    public FurnitureStorage(String[] towns, int[][] customerData) {
+        this.towns = towns;
+        this.customerData = customerData;
+    }
+
+    /**
+     * Calculates the total sum of all customers across all rows and columns.
+     */
     @Override
     public int GetTotalCustomers() {
         int total = 0;
-        for (int[] row : customerData) {
-            for (int value : row) {
-                total += value;
+        for (int[] townRow : customerData) {
+            for (int count : townRow) {
+                total += count;
             }
         }
         return total;
     }
 
+    /**
+     * Calculates the mathematical average count based on the total elements (6 sectors).
+     */
     @Override
     public double GetAverageCustomers() {
-        int total = GetTotalCustomers();
-        // Total elements = 2 rows * 3 columns = 6
-        int totalElements = customerData.length * customerData[0].length;
-        return (double) total / totalElements;
+        int totalCustomers = GetTotalCustomers();
+        int totalElements = towns.length * customerData[0].length; // 3 towns * 2 years = 6
+        
+        if (totalElements == 0) return 0;
+        return (double) totalCustomers / totalElements;
     }
 
+    /**
+     * Scans single cell entries to find the absolute peak value.
+     * Returns: "Cape Town (125)"
+     */
     @Override
     public String GetMostPopularTown() {
-        int maxCustomers = -1;
-        String mostPopularTown = "";
+        int maxCustomers = Integer.MIN_VALUE;
+        String popularTown = "";
 
-        // Loop through each town (column)
-        for (int col = 0; col < towns.length; col++) {
-            int townTotal = 0;
-            // Sum the values across all years (rows) for this town
-            for (int row = 0; row < customerData.length; row++) {
-                townTotal += customerData[row][col];
-            }
-            
-            // Check if this town has the highest combined total
-            if (townTotal > maxCustomers) {
-                maxCustomers = townTotal;
-                mostPopularTown = towns[col] + " (" + maxCustomers + ")";
+        for (int i = 0; i < towns.length; i++) {
+            for (int j = 0; j < customerData[i].length; j++) {
+                if (customerData[i][j] > maxCustomers) {
+                    maxCustomers = customerData[i][j];
+                    popularTown = towns[i];
+                }
             }
         }
-        return mostPopularTown;
+        return popularTown + " (" + maxCustomers + ")";
     }
 
+    /**
+     * Scans single cell entries to find the absolute lowest value.
+     * Returns: "Durban (15)"
+     */
     @Override
     public String GetLeastPopularTown() {
         int minCustomers = Integer.MAX_VALUE;
-        String leastPopularTown = "";
+        String quietTown = "";
 
-        // Loop through each town (column)
-        for (int col = 0; col < towns.length; col++) {
-            int townTotal = 0;
-            // Sum the values across all years (rows) for this town
-            for (int row = 0; row < customerData.length; row++) {
-                townTotal += customerData[row][col];
-            }
-            
-            // Check if this town has the lowest combined total
-            if (townTotal < minCustomers) {
-                minCustomers = townTotal;
-                leastPopularTown = towns[col] + " (" + minCustomers + ")";
+        for (int i = 0; i < towns.length; i++) {
+            for (int j = 0; j < customerData[i].length; j++) {
+                if (customerData[i][j] < minCustomers) {
+                    minCustomers = customerData[i][j];
+                    quietTown = towns[i];
+                }
             }
         }
-        return leastPopularTown;
+        return quietTown + " (" + minCustomers + ")";
     }
 }

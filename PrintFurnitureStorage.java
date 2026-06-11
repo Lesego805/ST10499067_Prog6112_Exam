@@ -8,6 +8,8 @@ package com.mycompany.mainapplication1;
  *
  * @author Student
  */
+
+//Question 1.3
 public class PrintFurnitureStorage {
 
     public void printReport(IFurnitureStorage storage) {

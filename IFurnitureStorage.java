@@ -8,6 +8,7 @@ package com.mycompany.mainapplication1;
  *
  * @author Student
  */
+//Question 1.2
 public interface IFurnitureStorage {
     int GetTotalCustomers();
     double GetAverageCustomers();
